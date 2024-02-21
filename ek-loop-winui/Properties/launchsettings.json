@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "ek-loop-winui (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "ek-loop-winui (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
