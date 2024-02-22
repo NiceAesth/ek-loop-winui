@@ -10,7 +10,7 @@
     <Page.Resources>
         <helpers:FloatFormatConverter x:Key="FloatFormatConverter" />
 
-        <DataTemplate x:Key="HardwareDataTemplate" x:DataType="models:LibreHardware">
+        <DataTemplate x:Key="HardwareDataTemplate" x:DataType="models:LibreHardwareDTO">
             <StackPanel>
                 <TextBlock Text="{x:Bind Name}" Padding="8" Style="{ThemeResource TitleTextBlockStyle}"/>
                 <ItemsRepeater x:Name="SensorRepeater" ItemsSource="{x:Bind Sensors}" ItemTemplate="{StaticResource SensorDataTemplate}">
@@ -26,16 +26,16 @@
                 <StackPanel Orientation="Vertical" Height="100" VerticalAlignment="Bottom" Padding="5,1,5,1" Background="{ThemeResource SolidBackgroundFillColorBaseAlt}">
                     <TextBlock Text="{x:Bind Name}" TextAlignment="Center" Padding="0,4,0,0" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Value" Padding="0,0,5,0" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
-                        <TextBlock Text="{x:Bind Value, Converter={StaticResource FloatFormatConverter}}" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBlock x:Uid="SensorValueColumn" Padding="0,0,5,0" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+                        <TextBlock Text="{x:Bind Value, Converter={StaticResource FloatFormatConverter}, Mode=OneWay}" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Min" Padding="0,0,5,0" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
-                        <TextBlock Text="{x:Bind Min, Converter={StaticResource FloatFormatConverter}}" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBlock x:Uid="SensorMinColumn" Padding="0,0,5,0" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+                        <TextBlock Text="{x:Bind Min, Converter={StaticResource FloatFormatConverter}, Mode=OneWay}" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Max" Padding="0,0,5,0" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
-                        <TextBlock Text="{x:Bind Max, Converter={StaticResource FloatFormatConverter}}" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBlock x:Uid="SensorMaxColumn" Padding="0,0,5,0" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+                        <TextBlock Text="{x:Bind Max, Converter={StaticResource FloatFormatConverter}, Mode=OneWay}" Style="{ThemeResource BodyTextStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>

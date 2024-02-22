@@ -2,5 +2,5 @@
 
 public class EKCacheData
 {
-    public List<EKFan> Fans;
+    public List<EKFan> Fans = null;
 }

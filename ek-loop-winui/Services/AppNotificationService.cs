@@ -2,7 +2,6 @@
 using System.Web;
 
 using ek_loop_winui.Contracts.Services;
-using ek_loop_winui.ViewModels;
 
 using Microsoft.Windows.AppNotifications;
 

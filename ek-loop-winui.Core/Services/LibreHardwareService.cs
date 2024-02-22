@@ -5,14 +5,15 @@ using LibreHardwareMonitor.Hardware;
 namespace ek_loop_winui.Core.Services;
 public class LibreHardwareService : ILibreHardwareService
 {
+    private static readonly SemaphoreSlim semaphore = new(1, 1);
     private readonly Computer computer = new()
     {
         IsCpuEnabled = true,
         IsGpuEnabled = true
     };
+
     public void Initialize()
     {
-
         computer.Open();
     }
 
@@ -22,15 +23,20 @@ public class LibreHardwareService : ILibreHardwareService
         computer.Close();
     }
 
-    public LibreHardware[] GetHardwareWithTemperatureSensors()
+    public List<LibreHardwareDTO> GetHardwareWithTemperatureSensors()
     {
-        return computer.Hardware
-            .Where(hardware => hardware.Sensors.Any(sensor => sensor.SensorType == SensorType.Temperature))
-            .Select(hardware => new LibreHardware
+        List<LibreHardwareDTO> data = new();
+        semaphore.Wait();
+        foreach (var hardware in computer.Hardware)
+        {
+            hardware.Update();
+            data.Add(new LibreHardwareDTO
             {
                 Name = hardware.Name,
                 Sensors = hardware.Sensors.Where(sensor => sensor.SensorType == SensorType.Temperature).ToArray()
-            })
-            .ToArray();
+            });
+        }
+        semaphore.Release();
+        return data;
     }
 }

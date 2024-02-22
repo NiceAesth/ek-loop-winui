@@ -185,16 +185,13 @@
   <data name="FanRPMColumn.Header" xml:space="preserve">
     <value>RPM</value>
   </data>
-  <data name="SensorMaxColumn.Header" xml:space="preserve">
-    <value>Max Value</value>
+  <data name="SensorMaxColumn.Text" xml:space="preserve">
+    <value>Max</value>
   </data>
-  <data name="SensorMinColumn.Header" xml:space="preserve">
-    <value>Min Value</value>
+  <data name="SensorMinColumn.Text" xml:space="preserve">
+    <value>Min</value>
   </data>
-  <data name="SensorNameColumn.Header" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="SensorValueColumn.Header" xml:space="preserve">
+  <data name="SensorValueColumn.Text" xml:space="preserve">
     <value>Value</value>
   </data>
 </root>

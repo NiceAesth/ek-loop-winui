@@ -36,10 +36,6 @@ public class EKDeviceService : IEKDeviceService
         (0xA1, 0x80)  // Unused
     };
 
-    private bool workerRunning = false;
-    private readonly PeriodicTimer updateWorkerTimer = new(TimeSpan.FromSeconds(3));
-    EKCacheData EKCacheData;
-
     public void Initialize()
     {
         context.SetDebugLevel(LogLevel.Info);
@@ -60,30 +56,12 @@ public class EKDeviceService : IEKDeviceService
 
     ~EKDeviceService()
     {
-        updateWorkerTimer?.Dispose();
         context?.Dispose();
     }
 
     protected static byte[] RPMToBytes(int rpm)
     {
         return new byte[] { (byte)((rpm >> 8) & 0xFF), (byte)(rpm & 0xFF) };
-    }
-
-    public async Task StartUpdateWorker()
-    {
-        if (workerRunning)
-        {
-            return;
-        }
-
-        workerRunning = true;
-        while (await updateWorkerTimer.WaitForNextTickAsync())
-        {
-            EKCacheData = new EKCacheData
-            {
-                Fans = await getAllFans()
-            };
-        }
     }
 
     public async Task<EKFan> GetFan(int id)
@@ -100,8 +78,6 @@ public class EKDeviceService : IEKDeviceService
         packet[8] = 0x00;
         packet[9] = 0x20;
         packet[10] = 0x66;
-        packet[11] = 0xFF;
-        packet[12] = 0xFF;
         packet[13] = 0xED;
 
         await semaphore.WaitAsync();
@@ -119,9 +95,10 @@ public class EKDeviceService : IEKDeviceService
         };
     }
 
-    public async Task SetFan(int id, int pwm)
+    public async Task SetFan(int id, int pwm, int rpm = 0)
     {
         var packet = new byte[BUFFER_SIZE];
+        var rpmBytes = RPMToBytes(rpm);
         packet[0] = 0x10;
         packet[1] = 0x12;
         packet[2] = 0x29;
@@ -132,6 +109,8 @@ public class EKDeviceService : IEKDeviceService
         packet[7] = FAN_CHANNELS[id].Item2;
         packet[9] = 0x10;
         packet[10] = 0x20;
+        packet[15] = rpmBytes[0];
+        packet[16] = rpmBytes[1];
         packet[24] = (byte)pwm;
         packet[46] = 0xED;
 
@@ -141,26 +120,14 @@ public class EKDeviceService : IEKDeviceService
         semaphore.Release();
     }
 
-    private async Task<List<EKFan>> getAllFans()
+    public async Task<List<EKFan>> GetAllFans()
     {
         var fans = new List<EKFan>();
         for (var i = 0; i < FAN_COUNT; i++)
         {
-
-
             fans.Add(await GetFan(i));
         }
         return fans;
-    }
-
-    public async Task<List<EKFan>> GetAllFans()
-    {
-        if (workerRunning && EKCacheData != null)
-        {
-            return EKCacheData.Fans;
-        }
-
-        return await getAllFans();
     }
 }
 
